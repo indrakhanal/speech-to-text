@@ -1,0 +1,17 @@
+certifi==2020.12.5
+chardet==4.0.0
+click==7.1.2
+flask==1.1.2
+idna==2.10
+itsdangerous==1.1.0
+Jinja2==2.11.3
+MarkupSafe==1.1.1
+#PyAudio @ file:///G:/flask_speech_recog/PyAudio-0.2.11-cp37-cp37m-win32.whl
+PyJWT==1.7.1
+pytz==2021.1
+requests==2.25.1
+six==1.15.0
+SpeechRecognition==3.8.1
+twilio==6.55.0
+urllib3==1.26.4
+Werkzeug==1.0.1
