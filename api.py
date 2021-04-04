@@ -11,18 +11,24 @@ from twilio.twiml.voice_response import VoiceResponse
 
 app = Flask(__name__)
 
+import time
+
 
 @app.route("/api/", methods=['GET', 'POST'])
 def api_get_view():
     global sr
     if request.method == 'POST':
+        t = time.time()
         output_wav = request.files["output_wav"]
         sr = SRR(output_wav)
         sender = "sender_id"
         text = sr.return_text()
+        complete = time.time() - t
+
         data = {
             'sender_id': sender,
-            'text': text
+            'text': text,
+            'response_time': complete
         }
         response = app.response_class(
             response=json.dumps(data),

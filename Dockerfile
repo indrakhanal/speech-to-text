@@ -20,6 +20,6 @@ RUN pip3 install -r /app/requirements.txt
 WORKDIR ./app/
 
 #COPY . /app
-#ENTRYPOINT["python3"]
+ENTRYPOINT[]
 
 CMD ["python3", "api.py"]
