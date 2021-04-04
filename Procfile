@@ -1,1 +1,1 @@
-web: uwsgi uwsgi.ini
+web: python api.py $PORT

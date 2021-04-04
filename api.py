@@ -5,6 +5,7 @@ from flask import request
 # import speech_recognition as sr
 from flask import json
 from twilio.twiml.voice_response import VoiceResponse
+import os
 
 # r = sr.Recognizer()
 # m = sr.Microphone()
@@ -55,4 +56,6 @@ def get_score():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port,debug=True)
