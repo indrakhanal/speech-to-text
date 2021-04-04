@@ -10,16 +10,16 @@ RUN pip3 install PyAudio
 
 #RUN pip install flask
 
-#ADD . /app/
+ADD . /app/
 
 
-COPY requirements.txt /app/requirements.txt
+#COPY requirements.txt /app/requirements.txt
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r /app/requirements.txt
 
 WORKDIR ./app/
 
-COPY . /app
+#COPY . /app
 #ENTRYPOINT["python3"]
 
 CMD ["python3", "api.py"]

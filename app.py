@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask.views import View
 from speech_to_text.main import SRR
 import requests
+from flask import request
 
 app = Flask(__name__)
 
@@ -75,6 +76,26 @@ class Api(View):
 
 
 app.add_url_rule('/speak/', view_func=Api.as_view('speak'))
+
+
+@app.route("/api/", methods=['GET', 'POST'])
+def api_get_view():
+    global sr
+    if request.method == 'POST':
+        output_wav = request.files["output_wav"]
+        sr = SRR(output_wav)
+        sender = "sender_id"
+        text = sr.return_text()
+        data = {
+            'sender_id': sender,
+            'text': text
+        }
+        response = app.response_class(
+            response=json.dumps(data),
+            status=200,
+            mimetype='application/json'
+        )
+        return response
 
 if __name__ == "__main__":
     app.run(debug=True)
