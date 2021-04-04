@@ -12,72 +12,40 @@ from twilio.twiml.voice_response import VoiceResponse
 app = Flask(__name__)
 
 
-# def return_text():
-#     try:
-#         # print("A moment of silence, please...")
-#         with m as source: r.adjust_for_ambient_noise(source)
-#         print("Set minimum energy threshold to {}".format(r.energy_threshold))python
-#         print("Say something!")
-#         with m as source:
-#             audio = r.listen(source)
-#         print("Got it! Now to recognize it...")
-#         try:
-#             value = r.recognize_google(audio)
-#             if str is bytes:
-#                 print(u"You said {}".format(value).encode("utf-8"))
-#                 return value.encode("utf-8")
-#             else:
-#                 print("You said {}".format(value))
-#                 return value, audio
-#         except sr.UnknownValueError:
-#             message = "Oops! Didn't catch that"
-#             return message
-#         except sr.RequestError as e:
-#             print(f" Error Occur{0}".format(e))
-#     except KeyboardInterrupt:
-#         pass
-
-
-@app.route("/api/")
+@app.route("/api/", methods=['GET', 'POST'])
 def api_get_view():
     global sr
-    sr = SRR()
-    sender = "sender_id"
-    text = sr.return_text()
-    data = {
-        'sender_id': sender,
-        'text': text
-    }
-    response = app.response_class(
-        response=json.dumps(data),
-        status=200,
-        mimetype='application/json'
-    )
-    return response
+    if request.method == 'POST':
+        output_wav = request.files["output_wav"]
+        sr = SRR(output_wav)
+        sender = "sender_id"
+        text = sr.return_text()
+        data = {
+            'sender_id': sender,
+            'text': text
+        }
+        response = app.response_class(
+            response=json.dumps(data),
+            status=200,
+            mimetype='application/json'
+        )
+        return response
 
 
-@app.route("/record", methods=["POST"])
-def record():
-    item_return = sr.return_text()
-    print(item_return)
-    audio = item_return[1]
-    response = VoiceResponse()
+@app.route('/')
+def voice():
+    return render_template('voice.html')
 
-    # Make sure this is the first call to our URL and record and transcribe
-    if 'RecordingUrl' not in request.form:
-        # Use <Say> verb to provide an outgoing message
-        response.say("Hello, please leave your message after the tone.")
 
-        # Use <Record> verb to record incoming message and set the transcribe arguement to true
-        response.record(transcribe=True)
-        print(str(response))
-    else:
-        # Hang up the call
-        print("Hanging up...")
-        response.hangup()
-    res=str(response)
-    print(res, 'response')
-    return res
+@app.route('/api/audio', methods=['GET', 'POST'])
+def get_score():
+    if request.method == 'POST':
+        length = request.content_length
+        content_type = request.content_type
+        data = request.data
+        return f"""Content Type is  {content_type} and data is {data} \n length is {length}"""
+    elif request.method == 'GET':
+        return 'get method received'
 
 
 if __name__ == "__main__":
